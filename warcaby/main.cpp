@@ -33,6 +33,7 @@ int main() {
     while(pionki_1 != 0 && pionki_2 != 0)
     {
         cout << endl;
+        cout << "●: " << pionki_1 << " ◯: " << pionki_2 << endl;
         cout << "Gra teraz " << ((teraz == 0)?"●":"◯") << endl;
         cin >> y1 >> x1 >> y2 >> x2;
         x1--;
@@ -44,39 +45,41 @@ int main() {
         else{
             if(warunki(tab, teraz, x1, yy1, x2, yy2) == 0)
             {
-                if(tab[x2][yy2] == "●"){
-                    
-                   if(yy2 == 7 || yy2 == 0)
-                       continue;
-                    else
-                    {
-                        if(yy1 - yy2 > 0)
-                        {
-                            tab[x2][yy2] = " ";
-                            tab[x2+1][yy2-1] = tab[x1][yy1];
-                            tab[x1][yy1] = " ";
-                        }
-                        if(yy1 - yy2 < 0)
-                        {
-                            tab[x2][yy2] = " ";
-                            tab[x2-1][yy2+1] = tab[x1][yy1];
-                            tab[x1][yy1] = " ";
-                        }
-                        //zbijanie do tyłu
-                        //pionek za pionkiem do zbicia
-                        pionki_1--;
-                    }
-                    //gra się nie kończy
-                    teraz = 1;
-                }
-                else if(tab[x2][yy2] == "◯"){
-                    pionki_2--;
-                    teraz = 0;
-                }
-                else{
+                
+                if(yy2 == 7 || yy2 == 0)
+                    continue;
+                else if(tab[x2][yy2] == " " && abs(x1 -x2) == 1){
                 tab[x2][yy2] = tab[x1][yy1];
                 tab[x1][yy1] = " ";
                 teraz = (teraz == 1?0:1);
+                }
+                else if(abs(x1-x2) == 2 && abs(yy1 - yy2) == 2)
+                {
+                    if(x1 - x2 > 0 && yy1 -yy2 < 0)
+                    {
+                        if(tab[x2][yy2] == " ")
+                        {
+                            if(tab[x1][yy1] == "●" && tab[x1 - 1][yy1 + 1] == "◯")
+                            {
+                                tab[x1][yy1] = " ";
+                                tab[x1 - 1][yy1 + 1] = " ";
+                                tab[x2][yy2] = "●";
+                                pionki_2--;
+                                cout << "aaa\n";
+                            }
+                            else if(tab[x1][yy1] != "●" && tab[x1 - 1][yy1 + 1] != "◯")
+                            {
+                                tab[x1][yy1] = " ";
+                                tab[x1 - 1][yy1 + 1] = " ";
+                                tab[x2][yy2] = "◯";
+                                pionki_1--;
+                                cout << "bbb\n";
+                            }
+                            else
+                                continue;
+                            cout << "ccc\n";
+                        }
+                    }
                 }
                 system("clear");
                 wypisz(tab);
@@ -127,13 +130,17 @@ bool warunki(string tab[8][8],int teraz,int x1,int yy1,int x2,int yy2)
 {
     if(tab[x1][yy1] == "╳" || tab[x2][yy2] == "╳")
         return 1;
-    if(abs(yy1 - yy2) != 1 || abs(x1 - x2) != 1)
-        return 1;
     if(tab[x1][yy1] == tab[x2][yy2])
         return 1;
     if(tab[x1][yy1] == "●" && teraz == 1)
         return 1;
     if(tab[x1][yy1] != "●" && teraz != 1)
         return 1;
+    /*if(abs(yy1 - yy2) != 1 || abs(x1 - x2) != 1){
+        
+            return 1;
+    }*/
+//    pomyslec jeszcze nad tym
     return 0;
 }
+
